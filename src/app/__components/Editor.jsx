@@ -21,6 +21,7 @@ export default function Editor({noteId, editorInitialData, onSave}) {
     const [editorData, setEditorData] = useState(editorInitialData || DEFAULT_INITIAL_DATA);
 
     const initEditor = () => {
+      console.log('initEditor');
        const editor = new EditorJS({
           holder: 'editorjs',
           onReady: () => {
@@ -41,7 +42,7 @@ export default function Editor({noteId, editorInitialData, onSave}) {
 
       // This will run only once
   useEffect(() => {
-    if (ejInstance.current === null) {
+    if (!ejInstance.current) {
       initEditor();
     }
 

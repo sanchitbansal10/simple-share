@@ -20,6 +20,9 @@ const config = {
         // !! WARN !!
         ignoreDuringBuilds: true,
     },
+    compiler: {
+        removeConsole: false,
+    },
 };
 
 export default config;
