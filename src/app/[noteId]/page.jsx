@@ -18,6 +18,10 @@ export default async function NotePage({ params }) {
     } catch (error) {
         console.error(error);
     }
+
+    // editorData.blocks.forEach(block => {
+    //     console.log(block);
+    // });
     
     return (
         <div>

@@ -1,94 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server'
-import path from 'path';
-import { promises as fs } from 'fs';
-import { savedData } from '~/data';
+import { NextRequest, NextResponse } from 'next/server';
+import { mongodb } from '../../../utils/mongodb';
 
-export async function GET(request: Request) {
+interface NoteData {
+    id: string;
+    content: any;
+}
+
+export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
     if (!id) {
-        return NextResponse.json({ message: 'ID is required' }, { status: 400 });
+        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
     try {
-        const dataPath = path.join(process.cwd(), 'data', 'notes.json');
-        let savedData = {};
-        
-        try {
-            const fileContent = await fs.readFile(dataPath, 'utf8');
-            savedData = JSON.parse(fileContent);
-        } catch (error) {
-            // File doesn't exist or is empty, return 404
-            if (error.code === 'ENOENT') {
-                return NextResponse.json({ message: 'Note not found' }, { status: 404 });
-            }
-            throw error;
+        const note = await mongodb.readNote(id);
+        if (!note) {
+            return NextResponse.json({ error: 'Note not found' }, { status: 404 });
         }
-
-        const note = savedData[id];
-        console.log({note});
-        
-        if (note) {
-            return NextResponse.json(note, { status: 200 });
-        } else {
-            return NextResponse.json({ message: 'Note not found' }, { status: 404 });
-        }
+        return NextResponse.json(note);
     } catch (error) {
-        console.error('Error in GET /api/notes:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch note' },
-            { status: 500 }
-        );
+        console.error('Error reading note:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
-} 
-
-
+}
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
-        const { id, content } = body;
-        
-        if (!id || !content) {
-            return NextResponse.json(
-                { message: 'Missing required fields' }, 
-                { status: 400 }
-            );
-        }
-
-        const dataPath = path.join(process.cwd(), 'data', 'notes.json');
-        
-        // Read existing data
-        let savedData = {};
-        try {
-            const fileContent = await fs.readFile(dataPath, 'utf8');
-            savedData = JSON.parse(fileContent);
-        } catch (error) {
-            // File doesn't exist or is empty, that's ok
-            if (error.code !== 'ENOENT') {
-                console.error('Error reading file:', error);
-            }
-        }
-        
-        // Update data
-        savedData[id] = content;
-        
-        // Ensure directory exists
-        await fs.mkdir(path.dirname(dataPath), { recursive: true });    
-        
-        // Write back to file
-        await fs.writeFile(dataPath, JSON.stringify(savedData, null, 2));
-
-        return NextResponse.json(
-            { message: 'Note saved successfully' }, 
-            { status: 200 }
-        );
+        const { id, content } = await request.json() as NoteData;
+        await mongodb.saveNote(id, content);
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error in POST /api/notes:', error);
-        return NextResponse.json(
-            { message: 'Error saving note', error: error.message }, 
-            { status: 500 }
-        );
+        console.error('Error saving note:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
+    try {
+        await mongodb.deleteNote(id);
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting note:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+} 

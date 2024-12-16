@@ -23,6 +23,7 @@ const config = {
     compiler: {
         removeConsole: false,
     },
+    reactStrictMode: false,
 };
 
 export default config;
