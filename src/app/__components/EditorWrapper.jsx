@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 
 const Editor = dynamic(() => import('../__components/Editor'), { ssr: false });
+const MediumEditor = dynamic(() => import('../__components/MediumEditor'), { ssr: false });
 
 export default function EditorWrapper(props) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -12,4 +13,5 @@ export default function EditorWrapper(props) {
         });
     }
     return <Editor {...props} onSave={onSave} />
+    // return <MediumEditor {...props} onSave={onSave} />
 }

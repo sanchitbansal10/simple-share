@@ -1,7 +1,8 @@
 'use client';
-import { useEffect, useRef, useState, useCallback } from 'react';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
-import Header from '@editorjs/header';
+import { useCallback } from 'react';
+import type { OutputData } from '@editorjs/editorjs';
+import { createReactEditorJS } from 'react-editor-js';
+import { EDITOR_JS_TOOLS } from '~/utils/editorTools';
 
 interface EditorProps {
     noteId: string;
@@ -10,55 +11,41 @@ interface EditorProps {
 }
 
 const DEFAULT_INITIAL_DATA: OutputData = {
-    "time": new Date().getTime(),
-    "blocks": [
+    time: new Date().getTime(),
+    blocks: [
         {
-            "type": "header",
-            "data": {
-                "text": "This is my awesome editor!",
-                "level": 1
+            type: "header",
+            data: {
+                text: "Start writing...",
+                level: 1
             }
         },
     ],
-    "version": "2.28.2"
+    version: "2.28.2"
 };
 
+const ReactEditorJS = createReactEditorJS();
+
 export default function Editor({ noteId, editorInitialData, onSave }: EditorProps) {
-    const ejInstance = useRef<EditorJS | null>(null);
-    const editorRef = useRef<HTMLDivElement>(null);
-    console.log(editorInitialData);
-    
-    // Memoize the onChange handler
-    const handleChange = useCallback(async (editor: EditorJS) => {
-        const content = await editor.saver.save();
-        onSave(content);
+    // Memoize the onChange handler to prevent unnecessary re-renders
+    const handleChange = useCallback(async (api: any) => {
+        try {
+            const data = await api.saver.save();
+            onSave(data);
+        } catch (error) {
+            console.error('Saving error:', error);
+        }
     }, [onSave]);
 
-    // Initialize editor
-    useEffect(() => {
-        if (!editorRef.current) return;
-
-        const editor = new EditorJS({
-            holder: editorRef.current,
-            onReady: () => {
-                ejInstance.current = editor;
-            },
-            autofocus: true,
-            data: editorInitialData || DEFAULT_INITIAL_DATA,
-            onChange: () => handleChange(editor),
-            tools: { 
-                header: Header, 
-            },
-        });
-
-        // Cleanup function
-        return () => {
-            if (ejInstance.current) {
-                ejInstance.current.destroy();
-                ejInstance.current = null;
-            }
-        };
-    }, [noteId, editorInitialData, handleChange]); // Reduced dependencies
-
-    return <div ref={editorRef}></div>;
+    return (
+        <div className="w-full min-h-[500px]" role="textbox" aria-label="Rich text editor">
+            <ReactEditorJS
+                defaultValue={editorInitialData || DEFAULT_INITIAL_DATA}
+                onChange={handleChange}
+                tools={EDITOR_JS_TOOLS}
+                onReady={() => console.log('Editor.js is ready to work!')}
+                placeholder="Start writing your note..."
+            />
+        </div>
+    );
 }

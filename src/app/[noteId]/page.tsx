@@ -22,6 +22,7 @@ export default async function NotePage({ params }) {
         });
     
         editorData = await response.json();
+        console.log(editorData);
     } catch (error) {
         console.error(error);
     }
