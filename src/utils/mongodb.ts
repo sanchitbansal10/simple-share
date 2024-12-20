@@ -71,6 +71,7 @@ export const mongodb = {
         try {
             const collection = await getCollection();
             const note = await collection.findOne({ _id: noteId });
+            console.error({ notefrommongodb: note });
             return note ? note.content : null;
         } catch (error) {
             console.error('MongoDB readNote error:', error);

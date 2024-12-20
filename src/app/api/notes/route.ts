@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     try {
         const note = await mongodb.readNote(id);
-        console.log([note]);
+        console.error({noteAfterRead: note});
         if (!note) {
             return NextResponse.json({ error: 'Note not found' }, { status: 404 });
         }
