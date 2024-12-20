@@ -61,9 +61,6 @@ export default function InfoPopup() {
                         className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-6 z-50 border border-gray-200"
                     >
                         <div className="flex justify-between items-center mb-3">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                                Notes App
-                            </h3>
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
@@ -74,7 +71,7 @@ export default function InfoPopup() {
                         </div>
                         <div className="space-y-4 text-gray-600">
                             <p>
-                                This is a simple and safe note taking app. There is no login required. Simply write down your notes and share the URL.
+                                Want to jot down something quickly and share it with others? This is the app for those temporary notes.
                             </p>
                             <div>
                                 <h4 className="font-medium text-gray-900 mb-2">Features:</h4>
@@ -83,6 +80,7 @@ export default function InfoPopup() {
                                     <li>Real-time saving</li>
                                     <li>Browser encoding and decoding</li>
                                     <li>Shareable notes</li>
+                                    <li>No login required</li>
                                 </ul>
                             </div>
                             <div>
