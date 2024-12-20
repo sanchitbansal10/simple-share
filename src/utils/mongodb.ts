@@ -70,6 +70,7 @@ export const mongodb = {
     async readNote(noteId: string) {
         try {
             const collection = await getCollection();
+            console.error({collection: collection});
             const note = await collection.findOne({ _id: noteId });
             console.error({ notefrommongodb: note });
             return note ? note.content : null;
