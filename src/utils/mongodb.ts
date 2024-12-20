@@ -5,7 +5,7 @@
 import { MongoClient, ServerApiVersion, Collection } from 'mongodb';
 
 // MongoDB connection URI from environment variable
-const uri = process.env.MONGODB_URI || "mongodb+srv://sanchitbansal10:hNZ02OuG1wcd7Qua@cluster0.3emfo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI || "";
 
 // Database and collection names
 const DB_NAME = 'notesapp';
