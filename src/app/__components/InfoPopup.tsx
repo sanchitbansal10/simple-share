@@ -78,7 +78,6 @@ export default function InfoPopup() {
                                 <ul className="list-disc list-inside space-y-1">
                                     <li>Rich text editing</li>
                                     <li>Real-time saving</li>
-                                    <li>Browser encoding and decoding</li>
                                     <li>Shareable notes</li>
                                     <li>No login required</li>
                                 </ul>
