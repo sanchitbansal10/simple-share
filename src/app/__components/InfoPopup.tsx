@@ -58,17 +58,15 @@ export default function InfoPopup() {
                     <div
                         role="dialog"
                         aria-label="About this application"
-                        className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-6 z-50 border border-gray-200"
+                        className="absolute right-0 mt-0 w-80 bg-white rounded-lg shadow-xl p-6 z-50 border border-gray-200"
                     >
-                        <div className="flex justify-between items-center mb-3">
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                className="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
-                                aria-label="Close popup"
-                            >
-                                <IoClose className="w-5 h-5" />
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="absolute top-1 right-3 m-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                            aria-label="Close popup"
+                        >
+                            <IoClose className="w-5 h-5" />
+                        </button>
                         <div className="space-y-4 text-gray-600">
                             <p>
                                 Want to jot down something quickly and share it with others? This is the app for those temporary notes.
